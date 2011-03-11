@@ -1,0 +1,10 @@
+This is the README for 'Transcriptome' project.
+
+Transcriptome project includes four applications:
+
+- AnalyzeIsotigsCoverage
+- AnnotateTranscriptome
+- CharacterizeTranscriptome
+- MergeBlastFiles
+
+Jar files for all these apps can be found at 'jars' top-level folder.
