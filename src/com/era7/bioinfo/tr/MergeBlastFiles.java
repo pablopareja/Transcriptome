@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import org.jdom.Element;
 
 /**
- *
- * @author ppareja
+ * 
+ * @author Pablo Pareja Tobes <ppareja@era7.com>
  */
 public class MergeBlastFiles {
 
