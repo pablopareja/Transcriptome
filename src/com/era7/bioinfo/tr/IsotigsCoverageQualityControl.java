@@ -7,6 +7,7 @@ package com.era7.bioinfo.tr;
 
 import com.era7.lib.bioinfoxml.BlastOutput;
 import com.era7.lib.bioinfoxml.ContigXML;
+import com.era7.lib.bioinfoxml.Hit;
 import com.era7.lib.bioinfoxml.Iteration;
 import com.era7.lib.bioinfoxml.ProteinXML;
 import com.era7.lib.era7xmlapi.model.XMLElement;
@@ -16,6 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -106,8 +108,11 @@ public class IsotigsCoverageQualityControl {
 
                 outBuff.write("\nNumber of Blast hits: " + numberOfHits);
 
+                HashMap<String, ProteinXML> proteinsMap = new HashMap<String, ProteinXML>();
+
                 for (Element proteinElem : proteinsList) {
                     ProteinXML protein = new ProteinXML(proteinElem);
+                    proteinsMap.put(protein.getId(), protein);
                     numberOfBars += protein.asJDomElement().getChildren(ContigXML.TAG_NAME).size();
                 }
 
@@ -137,6 +142,24 @@ public class IsotigsCoverageQualityControl {
                     outBuff.write("\nError --> Number of isotigs tag values control was not passed successfully... :(");
                 }else{
                     outBuff.write("\nNumber of isotigs tag control passed! :)");
+                }
+
+                logger.log(Level.INFO, "Checking existence of every protein in both files...");
+                outBuff.write("\n\nExistence of every proteins in both files quality control:");
+                boolean allProteinsFound = true;
+                for (Iteration iteration : iterations) {
+                    for (Hit hit : iteration.getIterationHits()) {
+                        String proteinId = hit.getHitDef().split("\\|")[1];
+                        if(proteinsMap.get(proteinId) == null){
+                            allProteinsFound = false;
+                            outBuff.write("\nProtein: " + proteinId + " was not found in coverage file!");
+                        }
+                    }
+                }
+                if(!allProteinsFound){
+                    outBuff.write("\nError --> Proteins existence control was not passed successfully... :(");
+                }else{
+                    outBuff.write("\nProteins existence control passed! :)");
                 }
 
 
