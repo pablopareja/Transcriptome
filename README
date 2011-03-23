@@ -1,10 +1,12 @@
 This is the README for 'Transcriptome' project.
 
-Transcriptome project includes four applications:
+Transcriptome project includes five applications:
 
 - AnalyzeIsotigsCoverage
 - AnnotateTranscriptome
 - CharacterizeTranscriptome
 - MergeBlastFiles
+- IsotigsCoverageQualityControl
+
 
 Jar files for all these apps can be found at 'jars' top-level folder.
