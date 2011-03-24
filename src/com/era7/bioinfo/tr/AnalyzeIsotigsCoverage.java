@@ -121,6 +121,10 @@ public class AnalyzeIsotigsCoverage implements Executable {
                             if (hspTo > hspMaxHitTo) {
                                 hspMaxHitTo = hspTo;
                             }
+
+                            //adding hsps to contig
+                            hsp.detach();
+                            contig.addHsp(hsp);
                         }
                         //-------------------
 
@@ -129,7 +133,8 @@ public class AnalyzeIsotigsCoverage implements Executable {
                         if(contig.getBegin() > contig.getEnd()){
                             contig.setBegin(hspMaxHitTo);
                             contig.setEnd(hspMinHitFrom);
-                        }
+                        }                        
+
                         contigsArray.add(contig);
 
 
