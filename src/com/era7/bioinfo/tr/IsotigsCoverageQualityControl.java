@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.era7.bioinfo.tr;
 
 import com.era7.lib.bioinfoxml.BlastOutput;
@@ -59,9 +58,9 @@ public class IsotigsCoverageQualityControl {
 
             BufferedWriter outBuff = null;
 
-            try{
-                
-                
+            try {
+
+
                 outBuff = new BufferedWriter(new FileWriter(outputFile));
 
                 outBuff.write("Quality control results of files: \n");
@@ -74,7 +73,7 @@ public class IsotigsCoverageQualityControl {
                 String line = null;
 
                 //Reading blastFile
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     stBuilder.append(line);
                 }
                 //closing reader
@@ -87,7 +86,7 @@ public class IsotigsCoverageQualityControl {
                 //Reading isotigs coverage file
                 reader = new BufferedReader(new FileReader(coverageFile));
 
-                while((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     stBuilder.append(line);
                 }
                 //closing reader
@@ -118,9 +117,9 @@ public class IsotigsCoverageQualityControl {
 
                 outBuff.write("\nNumber of Bars: " + numberOfBars);
 
-                if(numberOfBars != numberOfHits){
+                if (numberOfBars != numberOfHits) {
                     outBuff.write("\nError --> There should be the same number of hits and bars...");
-                }else{
+                } else {
                     outBuff.write("\nBars/hits quality control passed! :)");
                 }
 
@@ -132,15 +131,15 @@ public class IsotigsCoverageQualityControl {
                 for (Element proteinElem : proteinsList) {
                     ProteinXML protein = new ProteinXML(proteinElem);
                     int contigsNumber = protein.asJDomElement().getChildren(ContigXML.TAG_NAME).size();
-                    if(protein.getNumberOfIsotigs() != contigsNumber){
+                    if (protein.getNumberOfIsotigs() != contigsNumber) {
                         outBuff.write("\n Wrong value in protein: " + protein.getId());
                         numberIsotigsErrorsFound = true;
                     }
                 }
 
-                if(numberIsotigsErrorsFound){
+                if (numberIsotigsErrorsFound) {
                     outBuff.write("\nError --> Number of isotigs tag values control was not passed successfully... :(");
-                }else{
+                } else {
                     outBuff.write("\nNumber of isotigs tag control passed! :)");
                 }
 
@@ -150,30 +149,69 @@ public class IsotigsCoverageQualityControl {
                 for (Iteration iteration : iterations) {
                     for (Hit hit : iteration.getIterationHits()) {
                         String proteinId = hit.getHitDef().split("\\|")[1];
-                        if(proteinsMap.get(proteinId) == null){
+                        if (proteinsMap.get(proteinId) == null) {
                             allProteinsFound = false;
                             outBuff.write("\nProtein: " + proteinId + " was not found in coverage file!");
                         }
                     }
                 }
-                if(!allProteinsFound){
+                if (!allProteinsFound) {
                     outBuff.write("\nError --> Proteins existence control was not passed successfully... :(");
-                }else{
+                } else {
                     outBuff.write("\nProteins existence control passed! :)");
+                }
+
+                logger.log(Level.INFO, "Checking protein coverage values absolute/percentage...");
+                outBuff.write("\n\nProtein coverage values quality control (absolute & percentage):");
+
+                boolean proteinCoverageValuesErrorsFound = false;
+
+                for (Element proteinElem : proteinsList) {
+
+                    ProteinXML protein = new ProteinXML(proteinElem);
+                    List<Element> contigs = protein.asJDomElement().getChildren(ContigXML.TAG_NAME);
+
+                    int coveredPositions = 0;
+                    for (int i = 1; i <= protein.getLength(); i++) {
+                        for (Element contigElem : contigs) {
+                            ContigXML contigXML = new ContigXML(contigElem);
+                            if (i >= contigXML.getBegin() && i <= contigXML.getEnd()) {
+                                coveredPositions++;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (protein.getProteinCoverageAbsolute() != coveredPositions) {
+                        outBuff.write("\nProtein: " + protein.getId() + " has an incorrect coverage absolute value!");
+                        proteinCoverageValuesErrorsFound = true;
+                    }
+
+                    double coveragePercentage = (coveredPositions * 100.0)/protein.getLength();
+                    if(coveragePercentage != protein.getProteinCoveragePercentage()){
+                        outBuff.write("\nProtein: " + protein.getId() + " has an incorrect coverage percentage value!");
+                        proteinCoverageValuesErrorsFound = true;
+                    }
+
+                }
+
+                if (proteinCoverageValuesErrorsFound) {
+                    outBuff.write("\nError --> Protein coverage values control was not passed successfully... :(");
+                } else {
+                    outBuff.write("\nProtein coverage values control passed! :)");
                 }
 
 
 
-
-            }catch(Exception e){
+            } catch (Exception e) {
                 logger.log(Level.SEVERE, e.getMessage());
                 StackTraceElement[] trace = e.getStackTrace();
                 for (StackTraceElement stackTraceElement : trace) {
                     logger.log(Level.SEVERE, stackTraceElement.toString());
                 }
-            }finally{
+            } finally {
                 logger.log(Level.INFO, "Closing output file...");
-                try {                    
+                try {
                     outBuff.close();
                     logger.log(Level.INFO, "Done! :)");
                 } catch (Exception e) {
@@ -186,5 +224,4 @@ public class IsotigsCoverageQualityControl {
             }
         }
     }
-
 }
