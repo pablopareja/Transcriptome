@@ -7,6 +7,7 @@ package com.era7.bioinfo.tr;
 
 import com.era7.lib.bioinfoxml.BlastOutput;
 import com.era7.lib.bioinfoxml.Iteration;
+import com.era7.lib.era7xmlapi.model.XMLElement;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -55,8 +56,7 @@ public class MergeBlastFiles {
                 }
                 inBuff1.close();
                 System.out.println("Building blastoutput xml 1....");
-                BlastOutput blastOutput1 = new BlastOutput(stBuilder.toString());
-                
+                BlastOutput blastOutput1 = new BlastOutput(stBuilder.toString());                
 
                 System.out.println("Reading blast file 2...");
                 BufferedReader inBuff2 = new BufferedReader(new FileReader(inFile2));
@@ -69,22 +69,35 @@ public class MergeBlastFiles {
                 System.out.println("Building blastoutput xml 2....");
                 BlastOutput blastOutput2 = new BlastOutput(stBuilder.toString());
 
-                ArrayList<Iteration> array = blastOutput1.getBlastOutputIterations();
+                ArrayList<Iteration> allIterations = blastOutput1.getBlastOutputIterations();
+                allIterations.addAll(blastOutput2.getBlastOutputIterations());
 
-                Element iterationsBlast2 = blastOutput2.asJDomElement().getChild(BlastOutput.BLAST_OUTPUT_ITERATIONS_TAG_NAME);
+                System.out.println("Detaching iterations...");
 
-                System.out.println("Copying iterations...");
-
-                for (Iteration iteration : array) {
+                for (Iteration iteration : allIterations) {
                     iteration.detach();
-                    iterationsBlast2.addContent(iteration.asJDomElement());
                 }
 
-                System.out.println("Done!");
+                outBuff.write("<BlastOutput>\n");
+                
+                for (XMLElement tempElem  : blastOutput1.getChildren()) {
+                    if(!tempElem.getName().equals(BlastOutput.BLAST_OUTPUT_ITERATIONS_TAG_NAME)){
+                        outBuff.write(tempElem.toString() + "\n");
+                    }
+                }
+                
+                outBuff.write("<BlastOutput_iterations>\n");
 
-                System.out.println("Writing output file....");
-                outBuff.write(blastOutput2.toString());
+                for (Iteration iteration : allIterations) {
+                    outBuff.write(iteration.toString() + "\n");
+                }
+                
+                outBuff.write("</BlastOutput_iterations>\n");
+                outBuff.write("</BlastOutput>\n");
                 outBuff.close();
+
+
+                System.out.println("Done!");
 
             }catch(Exception e){
                 e.printStackTrace();
