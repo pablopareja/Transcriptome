@@ -5,7 +5,6 @@ Transcriptome project includes five applications:
 - AnalyzeIsotigsCoverage
 - AnnotateTranscriptome
 - CharacterizeTranscriptome
-- MergeBlastFiles
 - IsotigsCoverageQualityControl
 
 
