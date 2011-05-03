@@ -78,13 +78,20 @@ public class AnnotateTranscriptome implements Executable {
                 //(first position iteration query def)
 
                 for (Iteration iteration : iterations) {
-                    String sampleId = iteration.getQueryDef().split("\\|")[0];
-                    ArrayList<Iteration> sampleIterations = sampleIterationsMap.get(sampleId);
-                    if (sampleIterations == null) {
-                        sampleIterations = new ArrayList<Iteration>();
-                        sampleIterationsMap.put(sampleId, sampleIterations);
+
+                    if (iteration.getQueryDef() != null) {
+                        
+                        String sampleId = iteration.getQueryDef().split("\\|")[0];
+                        ArrayList<Iteration> sampleIterations = sampleIterationsMap.get(sampleId);
+                        if (sampleIterations == null) {
+                            sampleIterations = new ArrayList<Iteration>();
+                            sampleIterationsMap.put(sampleId, sampleIterations);
+                        }
+                        sampleIterations.add(iteration);
+                        
                     }
-                    sampleIterations.add(iteration);
+
+
                 }
                 System.out.println(sampleIterationsMap.size() + " different samples detected...");
 
@@ -176,7 +183,7 @@ public class AnnotateTranscriptome implements Executable {
                             cachedUniprotData.put(string, tempGene);
 
                             System.out.println(string + " data retrieved! ");
-                        }else{
+                        } else {
                             System.out.println("Protein data was cached :D");
                         }
 
