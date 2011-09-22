@@ -256,6 +256,7 @@ public class CharacterizeTranscriptome implements Executable{
                     System.out.println("contigsSet = " + contigsSet);
                     for (String currentContigId : contigsSet) {
                         if(!contigsAlreadyCounted.contains(currentContigId)){
+                            System.out.println("currentContigId = " + currentContigId);
                             resAbsolute += contigReads.get(currentContigId);
                         }                        
                         contigsAlreadyCounted.add(currentContigId);

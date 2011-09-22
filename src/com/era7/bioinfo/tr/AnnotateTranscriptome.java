@@ -118,6 +118,8 @@ public class AnnotateTranscriptome implements Executable {
                     //--------------------------------------------------------------
 
                     for (Iteration iteration : sampleIterationsMap.get(currentSampleKey)) {
+                        System.out.println(iteration.getQueryDef());
+                        
                         String isotigId = iteration.getQueryDef().split("\\|")[1];
                         ArrayList<Hit> hits = iteration.getIterationHits();
                         if (hits.size() > 0) {
