@@ -71,7 +71,7 @@
     nbproject/build-impl.xml file. 
 
     -->
-    <target name="-post-jar">
+<!--    <target name="-post-jar">
         <jar jarfile="jars/AnnotateTranscriptome.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar"
@@ -82,8 +82,8 @@
                 <attribute name="Main-Class" value="com.era7.bioinfo.tr.AnnotateTranscriptome"/>
             </manifest>
         </jar>
-    </target>
-<!--    <target name="-post-jar">
+    </target>-->
+    <target name="-post-jar">
         <jar jarfile="jars/CharacterizeTranscriptome.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
             <zipfileset src="lib/BioinfoUtil-1.0-jar-with-dependencies.jar"
@@ -94,7 +94,7 @@
                 <attribute name="Main-Class" value="com.era7.bioinfo.tr.CharacterizeTranscriptome"/>
             </manifest>
         </jar>
-    </target>-->
+    </target>
 <!--    <target name="-post-jar">
         <jar jarfile="jars/AnalyzeIsotigsCoverage.jar">
             <zipfileset src="${dist.jar}" excludes="META-INF/*" />
