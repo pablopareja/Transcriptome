@@ -249,6 +249,8 @@ public class CharacterizeTranscriptome implements Executable{
 
                 HashSet<String> contigsAlreadyCounted = new HashSet<String>();
                 
+                System.out.println("currentUniprotId = " + currentUniprotId);
+                
                 HashSet<String> isotigsSet = uniprotIsotigsMap.get(currentUniprotId);
                 for (String currentIsotigId : isotigsSet) {
                     System.out.println("currentIsotigId = " + currentIsotigId);
@@ -256,6 +258,7 @@ public class CharacterizeTranscriptome implements Executable{
                     System.out.println("contigsSet = " + contigsSet);
                     for (String currentContigId : contigsSet) {
                         if(!contigsAlreadyCounted.contains(currentContigId)){
+                            System.out.println("currentContigId = " + currentContigId);
                             resAbsolute += contigReads.get(currentContigId);
                         }                        
                         contigsAlreadyCounted.add(currentContigId);
